@@ -54,9 +54,16 @@ def main():
             st.info("Tidak ada data untuk ditampilkan.")
             return
 
+        # Debugging: Periksa isi dan tipe dari row[3] (kolom waktu)
+        for i, row in enumerate(data):
+            st.write(f"Data row[{i}] (waktu): {row[3]}")  # Menampilkan nilai waktu
+            st.write(f"Tipe data row[{i}] (waktu): {type(row[3])}")  # Menampilkan tipe data waktu
+
         # Tambahkan nomor secara otomatis untuk setiap baris data
         table_data = [{"Nomor": i + 1, "ID": row[0], "ID_User": row[1],
-                       "Isi": row[2], "Waktu": row[3].strftime("%Y-%m-%d %H:%M:%S")} for i, row in enumerate(data)]
+                       "Isi": row[2], "Waktu": row[3].strftime("%Y-%m-%d %H:%M:%S") if isinstance(row[3], datetime) else str(row[3])}
+                      for i, row in enumerate(data)]
+
         df = pd.DataFrame(table_data)
 
         # Define custom column widths
