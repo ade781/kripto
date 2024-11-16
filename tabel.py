@@ -3,7 +3,6 @@ import mysql.connector
 import pandas as pd
 from db_connection import connect_db
 
-
 def main():
     st.title("Data Enkripsi")
 
@@ -46,7 +45,7 @@ def main():
         conn = connect_db()
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT id, user, isi, waktu FROM text WHERE user = %s", (user_id,))
+            "SELECT id, user, isi FROM text WHERE user = %s", (user_id,))
         data = cursor.fetchall()
         conn.close()
 
@@ -54,14 +53,8 @@ def main():
             st.info("Tidak ada data untuk ditampilkan.")
             return
 
-        # Debugging: Periksa isi dan tipe dari row[3] (kolom waktu)
-        for i, row in enumerate(data):
-            st.write(f"Data row[{i}] (waktu): {row[3]}")  # Menampilkan nilai waktu
-            st.write(f"Tipe data row[{i}] (waktu): {type(row[3])}")  # Menampilkan tipe data waktu
-
         # Tambahkan nomor secara otomatis untuk setiap baris data
-        table_data = [{"Nomor": i + 1, "ID": row[0], "ID_User": row[1],
-                       "Isi": row[2], "Waktu": row[3].strftime("%Y-%m-%d %H:%M:%S") if isinstance(row[3], datetime) else str(row[3])}
+        table_data = [{"Nomor": i + 1, "ID": row[0], "ID_User": row[1], "Isi": row[2]}
                       for i, row in enumerate(data)]
 
         df = pd.DataFrame(table_data)
@@ -71,8 +64,7 @@ def main():
             'Nomor': '10%',
             'ID': '10%',
             'ID_User': '15%',
-            'Isi': '45%',
-            'Waktu': '20%'  # Tambahkan kolom waktu dengan lebar 20%
+            'Isi': '65%'  # Kolom Isi menggunakan lebih banyak lebar
         }
 
         # Create the HTML table with custom column widths
@@ -87,7 +79,6 @@ def main():
 
         # Display the table with custom styling
         st.markdown(style_header + html_table, unsafe_allow_html=True)
-
 
 if __name__ == "__main__":
     main()
